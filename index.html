@@ -2,14 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<style type="text/css">
-<!--
+<link rel="stylesheet" href="https://cdnjs.loli.net/ajax/libs/mdui/0.4.2/css/mdui.min.css">
+<style>
 #clock strong {
-	font-size: 150px;
+	font-size: 200px;
+	font-family: Consolas, Monaoco, "Ubunto Mono";
+	font-weight: 100;
 	text-align: center;
-	color:#013878;
+	color: #3f51b5;
 }
--->
 </style>
 </head>
 
@@ -34,27 +35,29 @@
   <tr>
     <td colspan="3" ><table width="100%" border="0" height="122" >
       <tr id="btn_tr" style="display:block" >
-        <td width="15%" height="">&nbsp;</td>
-        <td width="70%" align="left" valign="bottom"   >
-            时：
-            <input id="hinput"  type="text" value="00" style="width:20px"/>
-            分
-            <input id="minput"  type="text" value="00" style="width:20px"/>
-            秒
-            <input id="sinput"  type="text" value="00" style="width:20px"/>
-
-						<br />
-            <input id="setB" type="button" value="设置" onclick="setTime()">
-            <input id="startB" type="button" value="开始" onclick="run()">
-            <input id="pauseB" type="button" value="暂停" onclick="pause()">
-            <input id="endB" type="button" value="停止" onclick="stop()">
-            <br />
-            <!--<input id="fullscreenB" type="button" value="FullScreen" onclick="fullscreen()">-->
-            <input id="hiddenB" type="button" value="隐藏控制面板" onclick="hid('btn_tr')">
+	  <div class="mdui-container">
+		<div class="mdui-col-xs-1"></div>
+        <div class="mdui-col-xs-10">
+			<label class="mdui-slider mdui-slider-discrete">
+			  <input type="range" id="hinput" step="1" min="0" max="24" value="0"/>
+			</label>
+			<label class="mdui-slider mdui-slider-discrete">
+			  <input type="range" id="minput" step="1" min="0" max="59" value="0"/>
+			</label>
+			<label class="mdui-slider mdui-slider-discrete">
+			  <input type="range" id="sinput" step="1" min="0" max="59" value="0"/>
+			</label>
+			<br />
+            <input id="setB" type="button" value="设置" onclick="setTime()" class="mdui-btn mdui-ripple" style="display:none">
+            <input id="startB" type="button" value="开始" onclick="run()" class="mdui-btn mdui-ripple">
+            <input id="pauseB" type="button" value="暂停" onclick="pause()" class="mdui-btn mdui-ripple">
+            <input id="endB" type="button" value="停止" onclick="stop()" class="mdui-btn mdui-ripple" style="display:none">
+            <input id="hiddenB" type="button" value="隐藏控制面板" onclick="hid('btn_tr')" class="mdui-btn mdui-ripple" style="display:none">
             <br>
             <input id="clockHidden" type="hidden" value="00:00:00">
-        </td>
-        <td width="5%">&nbsp;</td>
+        </div>
+		<div class="mdui-col-xs-1"></div>
+	  </div>
       </tr>
     </table></td>
   </tr>
@@ -97,34 +100,34 @@ function hid(id){
 }
 
 function setTime(){
-	 startB.disabled = false;
-     pauseB.disabled = true;
-     setB.disabled = false;
-     var s = sinput.value;
-     var m = minput.value;
-     var h = hinput.value;
-	 if(isNaN(h) || isNaN(m) || isNaN(s)){
+	// startB.disabled = false;
+	// pauseB.disabled = true;
+	// setB.disabled = false;
+	var s = sinput.value;
+	var m = minput.value;
+	var h = hinput.value;
+	if(isNaN(h) || isNaN(m) || isNaN(s))
 		return;
-	 }
 
-    var sn = new Number(s);
-    var mn = new Number(m);
-    var hn = new Number(h);
+	var sn = new Number(s);
+	var mn = new Number(m);
+	var hn = new Number(h);
 	var ss = sn < 10 ? ("0" + sn) : s;
-    var sm = mn < 10 ? ("0" + mn) : m;
-    var sh = hn < 10 ? ("0" + hn) : h;
-     var init = sh + ":" + sm + ":" + ss;
+	var sm = mn < 10 ? ("0" + mn) : m;
+	var sh = hn < 10 ? ("0" + hn) : h;
+	var init = sh + ":" + sm + ":" + ss;
 
-     clock.innerHTML = "<strong>"+init+"</strong>";
-     clockHidden.value = init;
-     window.clearTimeout(timer);
-     window.clearInterval(timer);
+	clock.innerHTML = "<strong>"+init+"</strong>";
+	clockHidden.value = init;
+	window.clearTimeout(timer);
+	window.clearInterval(timer);
 }
-function reset(){
-	 sinput.value = "00" ;
-     minput.value = "00" ;
-     hinput.value = "00" ;
 
+function reset(){
+	sinput.value = "00";
+	minput.value = "00";
+	hinput.value = "00";
+	mdui.updateSliders();
 }
 // 开始运行
 function run() {
@@ -132,6 +135,7 @@ function run() {
     pauseB.disabled = false;
     setB.disabled = true;
 	endB.disabled = false;
+	setTime();
     counter = 0;
     // 初始化开始时间
     startTime = new Date().valueOf();
@@ -150,17 +154,18 @@ function pause() {
 }
 //停止
 function stop(){
-	 startB.disabled = false;
-     pauseB.disabled = true;
-     setB.disabled = false;
-	 endB.disabled = true;
-	 sinput.value = "00" ;
-     minput.value = "00" ;
-     hinput.value = "00" ;
-	 clock.innerHTML = "<strong>00:00:00</strong>"
-	 clockHidden.value = "00:00:00";
-	 window.clearTimeout(timer);
-	 window.clearInterval(timer);
+	startB.disabled = false;
+	pauseB.disabled = true;
+	setB.disabled = false;
+	endB.disabled = true;
+	sinput.value = "00" ;
+	minput.value = "00" ;
+	hinput.value = "00" ;
+	mdui.updateSliders();
+	clock.innerHTML = "<strong>00:00:00</strong>"
+	clockHidden.value = "00:00:00";
+	window.clearTimeout(timer);
+	window.clearInterval(timer);
 }
 window.onload = function() {
     pauseB.disabled = true;
@@ -170,10 +175,11 @@ window.onload = function() {
 function onTimer()
 {
 
+	setTime();
     if (clockHidden.value == finish)
     {
         window.clearInterval(timer);
-		clock.innerHTML = "<strong><font color=#013878>Time's up!</font></strong>"
+		clock.innerHTML = "<strong><font color=#bb0000>Time's up!</font></strong>"
         startB.disabled = true;
         pauseB.disabled = true;
         setB.disabled = false;
@@ -208,9 +214,15 @@ function onTimer()
     clock.innerHTML = "<strong>"+nowtime+"</strong>";
     //倒计时1分钟时时间变红色
 	if(s<=59 && m==0 && h==0){
-        //setTimeout("onTimer2()",200);//红色时间闪烁
 		clock.innerHTML = "<strong><font color=#bb0000>"+nowtime+"</font></strong>"
 	}
+
+	// 设置 mdui 滑块
+	hinput.value = h;
+	minput.value = m;
+	sinput.value = s;
+	mdui.updateSliders();
+	
     clockHidden.value = nowtime;
     // 清除上一次的定时器
     window.clearInterval(timer);
@@ -228,21 +240,13 @@ function onTimer()
     // 启动新的定时器
     timer = window.setInterval("onTimer()", nextelapse);
 }
-function onTimer2(){
-    var hms = new String(clockHidden.value);
-    clock.innerHTML = "<strong><font color=#8b0000>"+hms+"</font></strong>";
-}
 function fullscreen(){
 	var WsShell = new ActiveXObject('WScript.Shell')
 	WsShell.SendKeys('{F11}');
 }
-/*
-function onTimer3(){
-    var hms = new String(clockHidden.value);
-    clock.innerHTML = "<strong><font color=#8b0000>"+hms+"</font></strong>";
-}
-*/
 </script>
+
+<script src="https://cdnjs.loli.net/ajax/libs/mdui/0.4.2/js/mdui.min.js"></script>
 
 </body>
 </html>
