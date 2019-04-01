@@ -64,13 +64,9 @@
 
 </table>
 
-    <!--
-<input id="diff" type="text">
-<input id="next" type="text">
--->
+<audio src="https://timer.memset0.cn/alert.wav" id="alert-music" controls="controls" loop="true" hidden="true"></audio>
 
 <script language="Javascript">
-
 var normalelapse = 1000;
 var nextelapse = normalelapse;
 var counter;
@@ -79,6 +75,9 @@ var startTime;
 var finish = "00:00:00";
 var timer = null;
 
+function alertPlay() {
+	document.getElementById('alert-music').play();
+}
 function fullscreen(){
 	var WshShell = new ActiveXObject('WScript.Shell')
     WshShell.SendKeys('{F11}');
@@ -174,40 +173,29 @@ window.onload = function() {
 // 倒计时函数
 function onTimer()
 {
-
 	setTime();
-    if (clockHidden.value == finish)
-    {
-        window.clearInterval(timer);
+	if (clockHidden.value == finish)
+	{
+		window.clearInterval(timer);
+		alertPlay();
 		clock.innerHTML = "<strong><font color=#bb0000>Time's up!</font></strong>"
-        startB.disabled = true;
-        pauseB.disabled = true;
-        setB.disabled = false;
+		startB.disabled = true;
+		pauseB.disabled = true;
+		setB.disabled = false;
 		endB.disabled = true;
-        return;
-    }
+		return;
+	}
 
-    //var hms = new String(clock.innerText).split(":");
-    var hms = new String(clockHidden.value).split(":");
-    //var ms = new Number(hms[3]);
-    var s = new Number(hms[2]);
-    var m = new Number(hms[1]);
-    var h = new Number(hms[0]);
-        s -= 1;
-        if (s < 0)
-        {
-            s = 59;
-            m -= 1;
-        }
-
-        if (m < 0)
-        {
-            m = 59;
-            h -= 1;
-        }
-    var ss = s < 10 ? ("0" + s) : s;
-    var sm = m < 10 ? ("0" + m) : m;
-    var sh = h < 10 ? ("0" + h) : h;
+	var hms = new String(clockHidden.value).split(":");
+	var s = new Number(hms[2]);
+	var m = new Number(hms[1]);
+	var h = new Number(hms[0]);
+	s -= 1;
+	if (s < 0) { s = 59; m -= 1; }
+	if (m < 0) { m = 59; h -= 1; }
+	var ss = s < 10 ? ("0" + s) : s;
+	var sm = m < 10 ? ("0" + m) : m;
+	var sh = h < 10 ? ("0" + h) : h;
 
     //start = sh + ":" + sm + ":" + ss + ":" + ms;
     var nowtime = sh + ":" + sm + ":" + ss;
